@@ -8,6 +8,8 @@ const animOrNone = (s) => animationsEnabled ? s : "none";
 const cmdCfg = config.widgets?.voiceCommand || {};
 const zoomMin = cmdCfg.zoomMin ?? 0.92;
 const zoomMax = cmdCfg.zoomMax ?? 1.08;
+const assistantName = cmdCfg.personality?.assistantName || "JARVIS";
+const assistantInitial = (assistantName.charAt(0) || "J").toUpperCase();
 
 function createArcReactor(options) {
   const { available = true } = options || {};
@@ -115,7 +117,7 @@ function createArcReactor(options) {
     transition: "all 0.3s ease",
     lineHeight: "1",
     textShadow: `0 0 8px ${T.accent}66`,
-  }, "J");
+  }, assistantInitial);
   core.appendChild(coreIcon);
 
   // ── State text icon ──
@@ -147,7 +149,7 @@ function createArcReactor(options) {
     marginTop: isNarrow ? "16px" : "20px",
     textAlign: "center",
     transition: "color 0.3s ease",
-  }, available ? "Tap to speak to JARVIS" : "Voice Unavailable");
+  }, available ? `Tap to speak to ${assistantName}` : "Voice Unavailable");
   section.appendChild(statusText);
 
   // ── Transcription preview ──
@@ -205,7 +207,7 @@ function createArcReactor(options) {
       outerRing.style.borderColor = T.accent + "33";
       glowRing.style.animation = animOrNone("jarvisArcPulse 4s ease-in-out infinite");
       btnContainer.style.animation = "none";
-      statusText.textContent = hasHistory ? "Speak your next message..." : "Tap to speak to JARVIS";
+      statusText.textContent = hasHistory ? "Speak your next message..." : `Tap to speak to ${assistantName}`;
       statusText.style.color = hasHistory ? T.accent : T.textMuted;
       previewEl.style.display = "none";
       previewEl.style.opacity = "0";
@@ -258,7 +260,7 @@ function createArcReactor(options) {
       glowRing.style.animation = "none";
       glowRing.style.boxShadow = `0 0 30px ${T.green}30`;
       btnContainer.style.animation = "none";
-      statusText.textContent = "Launching JARVIS...";
+      statusText.textContent = `Launching ${assistantName}...`;
       statusText.style.color = T.green;
     } else if (uiState === "streaming") {
       coreIcon.style.display = "none";
@@ -275,7 +277,7 @@ function createArcReactor(options) {
       outerRing.style.borderColor = T.green + "44";
       glowRing.style.animation = animOrNone("jarvisArcPulse 3s ease-in-out infinite");
       btnContainer.style.animation = "none";
-      statusText.textContent = "JARVIS is responding...";
+      statusText.textContent = `${assistantName} is responding...`;
       statusText.style.color = T.green;
     } else if (uiState === "done") {
       coreIcon.style.display = "inline";
@@ -289,7 +291,7 @@ function createArcReactor(options) {
       outerRing.style.borderColor = T.accent + "33";
       glowRing.style.animation = animOrNone("jarvisArcPulse 4s ease-in-out infinite");
       btnContainer.style.animation = "none";
-      statusText.textContent = hasHistory ? "Tap to continue the conversation" : "Tap to speak to JARVIS";
+      statusText.textContent = hasHistory ? "Tap to continue the conversation" : `Tap to speak to ${assistantName}`;
       statusText.style.color = hasHistory ? T.accent : T.textMuted;
     } else if (uiState === "error") {
       coreIcon.style.display = "inline";
@@ -328,7 +330,7 @@ function createArcReactor(options) {
 
   function setAvailable(bool) {
     btnContainer.style.cursor = bool ? "pointer" : "default";
-    statusText.textContent = bool ? "Tap to speak to JARVIS" : "Voice Unavailable";
+    statusText.textContent = bool ? `Tap to speak to ${assistantName}` : "Voice Unavailable";
     statusText.style.color = bool ? T.textMuted : T.red;
   }
 
