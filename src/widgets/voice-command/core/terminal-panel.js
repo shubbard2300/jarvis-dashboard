@@ -9,7 +9,7 @@ const cmdCfg = config.widgets?.voiceCommand || {};
 const termCfg = cmdCfg.terminal || {};
 
 const showCommand = termCfg.showCommand !== false;
-const termTitle = termCfg.title || "JARVIS OUTPUT";
+const termTitle = termCfg.title || `${(cmdCfg.personality?.assistantName || "JARVIS").toUpperCase()} OUTPUT`;
 const showProjectTag = termCfg.showProjectTag !== false;
 const showStatusBadge = termCfg.showStatusBadge !== false;
 const showCopyButton = termCfg.showCopyButton !== false;

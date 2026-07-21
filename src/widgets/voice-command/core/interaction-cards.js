@@ -7,6 +7,8 @@ const animationsEnabled = ctx.animationsEnabled !== false;
 const animOrNone = (s) => animationsEnabled ? s : "none";
 const cmdCfg = config.widgets?.voiceCommand || {};
 const interactiveCfg = cmdCfg.interactive || {};
+const assistantName = cmdCfg.personality?.assistantName || "JARVIS";
+const assistantNameUpper = assistantName.toUpperCase();
 
 function createCardRenderer(options) {
   const {
@@ -158,7 +160,8 @@ function createCardRenderer(options) {
 
     if (ttsService?.isEnabled && !ttsService.isMuted) {
       const toolDesc = description || `use ${toolName}`;
-      ttsService.speak(`Sir, JARVIS needs to ${toolDesc}. Allow?`);
+      const userName = personalityCfg?.userName || "sir";
+      ttsService.speak(`${userName}, ${assistantName} needs to ${toolDesc}. Allow?`);
     }
   }
 
@@ -219,7 +222,7 @@ function createCardRenderer(options) {
   function renderQuestionCard(requestId, request, container, scrollParent) {
     const isBatchMode = interactiveCfg.batchQuestions === true;
     const card = el("div", cardBaseStyles());
-    card.appendChild(makeCardHeader("\uD83D\uDCAC", "JARVIS NEEDS YOUR INPUT"));
+    card.appendChild(makeCardHeader("\uD83D\uDCAC", `${assistantNameUpper} NEEDS YOUR INPUT`));
 
     const message = request.message || "Please provide your input.";
     card.appendChild(el("div", {
@@ -429,7 +432,7 @@ function createCardRenderer(options) {
     questions.forEach((q, idx) => answers.set(idx, { value: null, source: null }));
 
     const card = el("div", cardBaseStyles());
-    card.appendChild(makeCardHeader("\uD83D\uDCAC", "JARVIS NEEDS YOUR INPUT"));
+    card.appendChild(makeCardHeader("\uD83D\uDCAC", `${assistantNameUpper} NEEDS YOUR INPUT`));
 
     const textInputs = [];
     let submitBtn = null;
@@ -768,7 +771,7 @@ function createCardRenderer(options) {
   // ── Display-Only Question Card ──
   function renderDisplayOnlyQuestionCard(input, container, scrollParent) {
     const card = el("div", { ...cardBaseStyles(), opacity: "0.6", pointerEvents: "none" });
-    card.appendChild(makeCardHeader("\uD83D\uDCAC", "JARVIS ASKED"));
+    card.appendChild(makeCardHeader("\uD83D\uDCAC", `${assistantNameUpper} ASKED`));
 
     const question = input.question || input.message || input.text || "\u2014";
     card.appendChild(el("div", {
