@@ -1,4 +1,4 @@
-.claude/
+.claude/settings.local.json
 CLAUDE.md
 .DS_Store
 *.json.bak
@@ -8,7 +8,7 @@ node_modules/
 companion/certs/
 companion/.env
 companion/node_modules/
-companion/com.jarvis.companion.plist
+companion/com.hailie.companion.plist
 
 # Personal config (user overrides, created from *.example.json templates)
 src/config/config.json
