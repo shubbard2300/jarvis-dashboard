@@ -12,12 +12,10 @@ const container = this.container;
 // Dataview re-runs this block on every file change. Reuse existing DOM
 // instead of rebuilding the entire dashboard (preserves terminal state, timers, etc.).
 // Uses labeled block + break (DataviewJS uses eval, so bare `return` is illegal).
-__hailie__: {
 if (window.__hailieDashboard?.wrapper) {
   container.appendChild(window.__hailieDashboard.styleEl);
   container.appendChild(window.__hailieDashboard.wrapper);
-  break __hailie__;
-}
+} else {
 
 const nodeFs = require("fs");
 const nodePath = require("path");
@@ -334,5 +332,5 @@ const ro = new ResizeObserver(() => {
   });
 });
 ro.observe(resizeTarget);
-} // end __hailie__ block
+} // end else block
 ```
