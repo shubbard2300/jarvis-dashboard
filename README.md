@@ -45,7 +45,7 @@
 
 | Widget | Preview |
 |---|---|
-| Voice Command | <img src="assets/widgets/jarvis-voice-command.png" width="600"> |
+| Voice Command | <img src="assets/widgets/hailie-voice-command.png" width="600"> |
 | Live Sessions | <img src="assets/widgets/live-sessions.png" width="600"> |
 | Agent Cards | <img src="assets/widgets/agent-cards.png" width="600"> |
 | Focus Timer | <img src="assets/widgets/focus-timer.png" width="300"> |

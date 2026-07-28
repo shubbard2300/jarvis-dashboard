@@ -2,7 +2,7 @@
 tags:
   - dashboard/ai
 cssclasses:
-  - jarvis-page
+  - hailie-page
 ---
 
 ```dataviewjs
@@ -12,12 +12,10 @@ const container = this.container;
 // Dataview re-runs this block on every file change. Reuse existing DOM
 // instead of rebuilding the entire dashboard (preserves terminal state, timers, etc.).
 // Uses labeled block + break (DataviewJS uses eval, so bare `return` is illegal).
-__jarvis__: {
-if (window.__jarvisDashboard?.wrapper) {
-  container.appendChild(window.__jarvisDashboard.styleEl);
-  container.appendChild(window.__jarvisDashboard.wrapper);
-  break __jarvis__;
-}
+if (window.__hailieDashboard?.wrapper) {
+  container.appendChild(window.__hailieDashboard.styleEl);
+  container.appendChild(window.__hailieDashboard.wrapper);
+} else {
 
 const nodeFs = require("fs");
 const nodePath = require("path");
@@ -55,7 +53,7 @@ const { el, fmtTokens, fmtCost, formatModel, describeAction, getModelFamily, add
 const markdownRenderer = await loadModule("core/markdown-renderer.js")({ el, T, config });
 
 // ── Load registry ──
-const registryPath = config.widgets?.agentCards?.registryPath || "src/config/Jarvis-Registry";
+const registryPath = config.widgets?.agentCards?.registryPath || "src/config/Hailie-Registry";
 const dashboardFolder = currentFilePath.replace(/\/[^/]+$/, "");
 const fullRegistryPath = dashboardFolder + "/" + registryPath;
 const registry = dv.page(fullRegistryPath);
@@ -156,7 +154,7 @@ if (config.dashboard?.showScanLine !== false) {
     left: "0", width: "100%", height: "6%",
     background: "linear-gradient(180deg, transparent, rgba(0,212,255,0.04), transparent)",
     pointerEvents: "none", zIndex: "1",
-    animation: animationsEnabled ? "jarvisScanLine 8s linear infinite" : "none",
+    animation: animationsEnabled ? "hailieScanLine 8s linear infinite" : "none",
     willChange: animationsEnabled ? "top" : "auto",
     contain: "layout style",
   }));
@@ -175,7 +173,7 @@ const WIDGET_MAP = {
   "quick-launch":          "widgets/quick-launch/index.js",
   "mission-control":       "widgets/mission-control/index.js",
   "recent-activity":       "widgets/recent-activity/index.js",
-  "jarvis-voice-command":  "widgets/voice-command/index.js",
+  "hailie-voice-command":  "widgets/voice-command/index.js",
   "footer":                "widgets/footer/index.js",
 };
 
@@ -263,12 +261,12 @@ const _visibilityHandler = () => {
   ctx._paused = hidden;
   if (hidden) {
     // Pause all CSS animations via class toggle (no DOM iteration)
-    wrapper.classList.add("jarvis-bg-paused");
+    wrapper.classList.add("hailie-bg-paused");
     // Stop all registered interval-based work
     ctx._pausables.forEach(p => { try { p.stop(); } catch(e) {} });
   } else {
     // Resume all CSS animations
-    wrapper.classList.remove("jarvis-bg-paused");
+    wrapper.classList.remove("hailie-bg-paused");
     // Restart all registered interval-based work
     ctx._pausables.forEach(p => { try { p.start(); } catch(e) {} });
   }
@@ -277,13 +275,13 @@ document.addEventListener("visibilitychange", _visibilityHandler);
 ctx.cleanups.push(() => document.removeEventListener("visibilitychange", _visibilityHandler));
 
 // ── Store dashboard reference for re-render prevention ──
-window.__jarvisDashboard = { wrapper, styleEl };
+window.__hailieDashboard = { wrapper, styleEl };
 
 // ── Cleanup (runs when note is actually closed, not on Dataview re-render) ──
 function dashboardCleanup() {
   ctx.intervals.forEach(id => clearInterval(id));
   ctx.cleanups.forEach(fn => { try { fn(); } catch(e) {} });
-  window.__jarvisDashboard = null;
+  window.__hailieDashboard = null;
 }
 
 // MutationObserver: detect when wrapper is removed from DOM
@@ -334,5 +332,5 @@ const ro = new ResizeObserver(() => {
   });
 });
 ro.observe(resizeTarget);
-} // end __jarvis__ block
+} // end else block
 ```

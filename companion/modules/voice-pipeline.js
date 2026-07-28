@@ -1,4 +1,4 @@
-// JARVIS Companion — Voice Pipeline
+// Hailie Companion — Voice Pipeline
 // Audio → Transcribe → Claude → TTS orchestration for a single connection.
 
 const fs = require("fs");
@@ -26,12 +26,12 @@ class VoicePipeline {
     try {
       const wavPath = await session.convertToWav();
       const wavStat = fs.statSync(wavPath);
-      console.log(`[JARVIS] WAV file: ${wavPath} (${wavStat.size} bytes)`);
+      console.log(`[HAILIE] WAV file: ${wavPath} (${wavStat.size} bytes)`);
 
       const result = await this._transcriber.transcribe(wavPath);
       const text = typeof result === "string" ? result : result.text;
       let detectedLang = typeof result === "string" ? null : result.detectedLang;
-      console.log(`[JARVIS] Transcription: "${text}" (lang: ${detectedLang || "default"})`);
+      console.log(`[HAILIE] Transcription: "${text}" (lang: ${detectedLang || "default"})`);
 
       if (!text) {
         conn.send(protocol.error("transcription", "Empty transcription — please try again"));
@@ -41,12 +41,12 @@ class VoicePipeline {
       // Filter detected language against supported list
       const supportedLangs = this._langConfig.supported || {};
       if (detectedLang && Object.keys(supportedLangs).length > 0 && !supportedLangs[detectedLang]) {
-        console.log(`[JARVIS] Detected '${detectedLang}' not in supported languages, falling back to '${this._langConfig.fallback || "en"}'`);
+        console.log(`[HAILIE] Detected '${detectedLang}' not in supported languages, falling back to '${this._langConfig.fallback || "en"}'`);
         detectedLang = this._langConfig.fallback || "en";
       }
 
       if (detectedLang) {
-        console.log(`[JARVIS] Detected language: ${detectedLang}`);
+        console.log(`[HAILIE] Detected language: ${detectedLang}`);
       }
 
       if (conn.tts && detectedLang) {
@@ -94,7 +94,7 @@ class VoicePipeline {
         }
         conn.speakBuffer = "";
         conn.send(protocol.streamEnd(sessionId));
-        console.log(`[JARVIS] Turn complete (exit ${exitCode}, session ${sessionId?.slice(0, 7) || "none"})`);
+        console.log(`[HAILIE] Turn complete (exit ${exitCode}, session ${sessionId?.slice(0, 7) || "none"})`);
       },
       onError: (err) => {
         conn.activeRunner = null;
@@ -105,7 +105,7 @@ class VoicePipeline {
         // Auto-approve tools from config
         const autoApprove = conn._rawConfig.widgets?.voiceCommand?.interactive?.autoApproveTools || [];
         if (autoApprove.includes(request.tool_name)) {
-          console.log(`[JARVIS] Auto-approving tool: ${request.tool_name} (${requestId})`);
+          console.log(`[HAILIE] Auto-approving tool: ${request.tool_name} (${requestId})`);
           if (conn.activeRunner) {
             conn.activeRunner.sendControlResponse({
               type: "control_response",
@@ -115,12 +115,12 @@ class VoicePipeline {
           return;
         }
         conn.send(protocol.permissionRequest(requestId, request));
-        console.log(`[JARVIS] Permission request → client: ${request.tool_name} (${requestId})`);
+        console.log(`[HAILIE] Permission request → client: ${request.tool_name} (${requestId})`);
       },
       onQuestionRequest: (requestId, request) => {
         if (conn.resetActivity) conn.resetActivity();
         conn.send(protocol.questionRequest(requestId, request));
-        console.log(`[JARVIS] Question request → client: ${requestId}`);
+        console.log(`[HAILIE] Question request → client: ${requestId}`);
       },
     });
   }

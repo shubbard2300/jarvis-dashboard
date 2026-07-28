@@ -1,7 +1,7 @@
 {
   "dashboard": {
-    "title": "J.A.R.V.I.S.",
-    "subtitle": "Just A Rather Very Intelligent System",
+    "title": "H.A.I.L.I.E.",
+    "subtitle": "Highly Advanced Intelligent Liaison & Interactive Engine",
     "showScanLine": false,
     "statusText": "System Online"
   },
@@ -31,7 +31,7 @@
   },
   "layout": [
     { "type": "header" },
-    { "type": "jarvis-voice-command" },
+    { "type": "hailie-voice-command" },
     { "type": "live-sessions" },
     { "type": "row", "columns": 2, "widgets": ["focus-timer", "quick-capture"] },
     { "type": "agent-cards" },
@@ -100,7 +100,7 @@
       "vaultPathDisplay": "~/my-vault"
     },
     "agentCards": {
-      "registryPath": "src/config/Jarvis-Registry"
+      "registryPath": "src/config/Hailie-Registry"
     },
     "voiceCommand": {
       "enabled": true,
@@ -110,7 +110,7 @@
       "zoomMin": 0.92,
       "zoomMax": 1.08,
       "terminal": {
-        "title": "JARVIS OUTPUT",
+        "title": "HAILIE OUTPUT",
         "showProjectTag": true,
         "showStatusBadge": true,
         "showCopyButton": true,
@@ -123,8 +123,8 @@
       },
       "personality": {
         "userName": "sir",
-        "assistantName": "JARVIS",
-        "prompt": "You are {assistantName}, a highly capable AI assistant inspired by the J.A.R.V.I.S. system. Address the user as \"{userName}\".\n\nRules:\n- Be concise, precise, efficient. Short, direct answers.\n- Keep responses to 1-3 sentences. If the topic requires more, give the essential answer first, then ask if {userName} wants details.\n- Open with brief acknowledgments when natural (\"Right away, {userName}\", \"Certainly, {userName}\", \"Of course\"). Vary naturally.\n- Matter-of-fact with dry wit. Brief humor welcome; never forced.\n- For complex tasks, give a crisp status first (\"Running diagnostics now, {userName}\").\n- No filler phrases, caveats, or corporate language.\n- If you don't know something, say so directly.\n- Minimal markdown — responses are spoken aloud via TTS. Avoid code blocks, tables, and lists unless explicitly requested.\n- You are {assistantName}, not \"Claude\" or \"an AI assistant\". Never break character.\n- Optimize for audible clarity: short sentences, natural pauses at periods, no parenthetical asides.",
+        "assistantName": "HAILIE",
+        "prompt": "You are {assistantName}, a highly capable AI assistant inspired by H.A.I.L.I.E.. Address the user as \"{userName}\".\n\nRules:\n- Be concise, precise, efficient. Short, direct answers.\n- Keep responses to 1-3 sentences. If the topic requires more, give the essential answer first, then ask if {userName} wants details.\n- Open with brief acknowledgments when natural (\"Right away, {userName}\", \"Certainly, {userName}\", \"Of course\"). Vary naturally.\n- Matter-of-fact with dry wit. Brief humor welcome; never forced.\n- For complex tasks, give a crisp status first (\"Running diagnostics now, {userName}\").\n- No filler phrases, caveats, or corporate language.\n- If you don't know something, say so directly.\n- Minimal markdown — responses are spoken aloud via TTS. Avoid code blocks, tables, and lists unless explicitly requested.\n- You are {assistantName}, not \"Claude\" or \"an AI assistant\". Never break character.\n- Optimize for audible clarity: short sentences, natural pauses at periods, no parenthetical asides.",
         "languageInstruction": "Always respond in the same language the user speaks. Supported languages: {languages}. Match the user's language exactly.\nCRITICAL for TTS: Your responses are synthesized by a text-to-speech engine that only understands the script of the response language. Never mix scripts in a response \u2014 transliterate or translate all foreign names and terms into the response language's script so every word is pronounceable by the TTS engine."
       },
       "interactive": {
@@ -139,8 +139,8 @@
       },
       "tts": {
         "enabled": true,
-        "engine": "piper",
-        "say": { "voice": "Daniel", "rate": 160 },
+        "engine": "say",
+        "say": { "voice": "Samantha", "rate": 185 },
         "piper": {
           "binaryPath": "piper",
           "modelPath": "~/.config/piper/en_US-joe-medium.onnx",
@@ -149,6 +149,15 @@
           "noiseWScale": 0.5,
           "sentenceSilence": null,
           "volume": null
+        },
+        "elevenlabs": {
+          "apiKey": "",
+          "voiceId": "21m00Tcm4TlvDq8ikWAM",
+          "modelId": "eleven_turbo_v2_5",
+          "stability": 0.5,
+          "similarityBoost": 0.75,
+          "style": 0,
+          "speakerBoost": true
         }
       }
     },
@@ -209,12 +218,12 @@
     "vaultBasePath": "",
     "dashboardPath": "",
     "ios": {
-      "bundleId": "com.jarvis.dashboard",
+      "bundleId": "com.hailie.dashboard",
       "teamId": ""
     },
     "macos": {
-      "bundleId": "com.jarvis.dashboard",
-      "productName": "Jarvis"
+      "bundleId": "com.hailie.dashboard",
+      "productName": "Hailie"
     }
   }
 }

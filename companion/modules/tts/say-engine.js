@@ -1,4 +1,4 @@
-// JARVIS Companion — macOS Say TTS Engine
+// Hailie Companion — macOS Say TTS Engine
 // Synthesizes speech via macOS `say` command, outputs PCM float32 at 22050 Hz.
 
 const { spawn } = require("child_process");

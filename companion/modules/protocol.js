@@ -1,4 +1,4 @@
-// JARVIS Companion — Message Protocol
+// Hailie Companion — Message Protocol
 // Defines the WebSocket message contract between mobile client and server.
 // All messages are JSON strings over text frames. Audio data uses binary frames.
 

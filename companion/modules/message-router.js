@@ -1,4 +1,4 @@
-// JARVIS Companion — Message Type Registry
+// Hailie Companion — Message Type Registry
 // Maps message types to handler functions. Open for extension (OCP).
 
 class MessageRouter {

@@ -1,4 +1,4 @@
-// JARVIS Companion — Whisper-cpp Transcriber
+// Hailie Companion — Whisper-cpp Transcriber
 // Wraps whisper-cli for server-side audio transcription.
 // Mirrors the spawning pattern from src/services/voice-service.js
 

@@ -2,7 +2,7 @@
 tags:
   - dashboard/ai
 cssclasses:
-  - jarvis-page
+  - hailie-page
 ---
 
 ```dataviewjs
@@ -116,7 +116,7 @@ if (config.dashboard?.showScanLine !== false) {
     left: "0", width: "100%", height: "6%",
     background: "linear-gradient(180deg, transparent, rgba(0,212,255,0.04), transparent)",
     pointerEvents: "none", zIndex: "1",
-    animation: "jarvisScanLine 8s linear infinite",
+    animation: "hailieScanLine 8s linear infinite",
   }));
 }
 

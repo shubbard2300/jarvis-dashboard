@@ -1,4 +1,4 @@
-// JARVIS Companion — Abstract TTS Engine
+// Hailie Companion — Abstract TTS Engine
 // Base class for all TTS engines. Provides shared stop/callback logic.
 
 class BaseTTSEngine {

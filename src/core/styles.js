@@ -40,7 +40,7 @@ const infiniteKeyframes = animEnabled ? `
     0%, 100% { text-shadow: 0 0 10px rgba(0,212,255,0.4), 0 0 30px rgba(0,212,255,0.2), 0 0 60px rgba(0,212,255,0.1); }
     50%      { text-shadow: 0 0 20px rgba(0,212,255,0.8), 0 0 50px rgba(0,212,255,0.4), 0 0 90px rgba(0,212,255,0.2); }
   }
-  @keyframes jarvisScanLine {
+  @keyframes hailieScanLine {
     0%   { top: -8%; }
     100% { top: 108%; }
   }
@@ -115,7 +115,7 @@ const infiniteKeyframes = animEnabled ? `
 ` : `
   /* Animations disabled — static single-frame fallbacks */
   @keyframes jarvisGlow { 0%, 100% { text-shadow: 0 0 10px rgba(0,212,255,0.4), 0 0 30px rgba(0,212,255,0.2); } }
-  @keyframes jarvisScanLine { 0% { top: -8%; } 100% { top: -8%; } }
+  @keyframes hailieScanLine { 0% { top: -8%; } 100% { top: -8%; } }
   @keyframes jarvisPulse { 0%, 100% { opacity: 1; transform: scale(1); } }
   @keyframes jarvisBreathing { 0%, 100% { transform: scale(1); } }
   @keyframes jarvisCursorBlink { 0%, 100% { opacity: 1; } }
@@ -140,7 +140,7 @@ styleEl.textContent = `
   ${infiniteKeyframes}
 
   /* ── Background pause — stops all animations when tab is hidden ── */
-  .jarvis-bg-paused * {
+  .hailie-bg-paused * {
     animation-play-state: paused !important;
   }
 

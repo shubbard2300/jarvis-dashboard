@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__github__list_branches",
+      "mcp__github__get_me",
+      "mcp__obsidian__get_active_file",
+      "mcp__obsidian__get_file_contents",
+      "mcp__obsidian__list_directory",
+      "mcp__obsidian__search",
+      "mcp__obsidian__list_tags",
+      "mcp__obsidian__get_periodic_note",
+      "mcp__obsidian__simple_search"
+    ]
+  },
+  "mcpServers": {
+    "obsidian": {
+      "command": "npx",
+      "args": ["-y", "mcp-obsidian"],
+      "env": {
+        "OBSIDIAN_API_KEY": "${OBSIDIAN_API_KEY}",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}

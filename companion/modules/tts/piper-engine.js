@@ -1,4 +1,4 @@
-// JARVIS Companion — Piper TTS Engine
+// Hailie Companion — Piper TTS Engine
 // Synthesizes speech via piper binary with multi-language model discovery.
 
 const { spawn } = require("child_process");
@@ -87,7 +87,7 @@ class PiperEngine extends BaseTTSEngine {
       return;
     }
 
-    const tmpFile = path.join(os.tmpdir(), `jarvis-tts-${crypto.randomUUID()}.wav`);
+    const tmpFile = path.join(os.tmpdir(), `hailie-tts-${crypto.randomUUID()}.wav`);
     const args = ["--model", modelPath];
 
     // Per-language piper overrides

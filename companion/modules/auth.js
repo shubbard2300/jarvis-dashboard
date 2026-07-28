@@ -1,4 +1,4 @@
-// JARVIS Companion — Authentication & Rate Limiting
+// Hailie Companion — Authentication & Rate Limiting
 // Token validation (timing-safe), connection limits, rate limiting, idle timeout.
 
 const crypto = require("crypto");

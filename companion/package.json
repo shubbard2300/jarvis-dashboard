@@ -1,8 +1,8 @@
 {
-  "name": "jarvis-companion",
+  "name": "hailie-companion",
   "version": "1.0.0",
   "private": true,
-  "description": "JARVIS Mac companion server — secure voice processing bridge for Obsidian mobile",
+  "description": "Hailie Mac companion server — secure voice processing bridge for Obsidian mobile",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
