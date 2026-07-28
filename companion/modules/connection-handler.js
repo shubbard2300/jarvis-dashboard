@@ -1,4 +1,4 @@
-// JARVIS Companion — Per-Connection State
+// Hailie Companion — Per-Connection State
 // Encapsulates WebSocket, audio session, runner, TTS, and safe send for one client.
 
 const WebSocket = require("ws");

@@ -1,4 +1,4 @@
-// JARVIS Companion — Server Assembly & Lifecycle
+// Hailie Companion — Server Assembly & Lifecycle
 // Wires all modules, creates HTTP/HTTPS + WS/WSS servers, handles graceful shutdown.
 
 const http = require("http");
@@ -44,7 +44,7 @@ function createServer(config) {
   });
 
   if (!transcriber.isAvailable) {
-    console.warn("[JARVIS] whisper-cli not available. Voice commands will not work. Text commands still functional.");
+    console.warn("[HAILIE] whisper-cli not available. Voice commands will not work. Text commands still functional.");
   }
 
   // Build message router
@@ -75,7 +75,7 @@ function createServer(config) {
   // Connection handler
   function handleConnection(ws, req) {
     const ip = auth.getClientIP(req);
-    console.log(`[JARVIS] Client connected from ${ip}`);
+    console.log(`[HAILIE] Client connected from ${ip}`);
     auth.registerConnection(ws);
     const resetActivity = auth.setupIdleTimeout(ws);
 
@@ -107,20 +107,20 @@ function createServer(config) {
     });
 
     ws.on("close", (code, reason) => {
-      console.log(`[JARVIS] Client disconnected (${ip}) code=${code} reason=${reason || "none"}`);
+      console.log(`[HAILIE] Client disconnected (${ip}) code=${code} reason=${reason || "none"}`);
       conn.cleanup();
       transcriber.cancel();
     });
 
     ws.on("error", (err) => {
-      console.error(`[JARVIS] WebSocket error: ${err.message}`);
+      console.error(`[HAILIE] WebSocket error: ${err.message}`);
     });
   }
 
   // Create servers
   const httpsServer = https.createServer(tlsOptions, (req, res) => {
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("JARVIS Companion Server — Use WebSocket to connect.");
+    res.end("Hailie Companion Server — Use WebSocket to connect.");
   });
 
   const wss = new WebSocket.Server({
@@ -130,7 +130,7 @@ function createServer(config) {
 
   const httpServer = http.createServer((req, res) => {
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("JARVIS Companion Server (local) — Use WebSocket to connect.");
+    res.end("Hailie Companion Server (local) — Use WebSocket to connect.");
   });
 
   const wsLocal = new WebSocket.Server({
@@ -143,32 +143,32 @@ function createServer(config) {
 
   // Error handling
   wss.on("error", (err) => {
-    console.error(`[JARVIS] WebSocket server error: ${err.message}`);
+    console.error(`[HAILIE] WebSocket server error: ${err.message}`);
   });
 
   httpsServer.on("error", (err) => {
     if (err.code === "EADDRINUSE") {
-      console.error(`[JARVIS] Port ${port} is already in use. Change network.port in config.json`);
+      console.error(`[HAILIE] Port ${port} is already in use. Change network.port in config.json`);
       process.exit(1);
     }
-    console.error(`[JARVIS] HTTPS server error: ${err.message}`);
+    console.error(`[HAILIE] HTTPS server error: ${err.message}`);
   });
 
   wsLocal.on("error", (err) => {
-    console.error(`[JARVIS] Local WebSocket server error: ${err.message}`);
+    console.error(`[HAILIE] Local WebSocket server error: ${err.message}`);
   });
 
   httpServer.on("error", (err) => {
     if (err.code === "EADDRINUSE") {
-      console.error(`[JARVIS] Local port ${localPort} is already in use.`);
+      console.error(`[HAILIE] Local port ${localPort} is already in use.`);
     } else {
-      console.error(`[JARVIS] Local HTTP server error: ${err.message}`);
+      console.error(`[HAILIE] Local HTTP server error: ${err.message}`);
     }
   });
 
   // Graceful shutdown
   function shutdown(signal) {
-    console.log(`\n[JARVIS] ${signal} received — shutting down...`);
+    console.log(`\n[HAILIE] ${signal} received — shutting down...`);
 
     wss.clients.forEach((ws) => ws.close(1001, "Server shutting down"));
     wsLocal.clients.forEach((ws) => ws.close(1001, "Server shutting down"));
@@ -178,7 +178,7 @@ function createServer(config) {
         httpsServer.close(() => {
           httpServer.close(() => {
             auth.destroy();
-            console.log("[JARVIS] Server stopped.");
+            console.log("[HAILIE] Server stopped.");
             process.exit(0);
           });
         });
@@ -186,7 +186,7 @@ function createServer(config) {
     });
 
     setTimeout(() => {
-      console.error("[JARVIS] Forced shutdown after timeout.");
+      console.error("[HAILIE] Forced shutdown after timeout.");
       process.exit(1);
     }, 5000);
   }
@@ -195,34 +195,34 @@ function createServer(config) {
   process.on("SIGINT", () => shutdown("SIGINT"));
 
   process.on("uncaughtException", (err) => {
-    console.error("[JARVIS] FATAL uncaught exception:", err);
+    console.error("[HAILIE] FATAL uncaught exception:", err);
     process.exit(1);
   });
 
   process.on("unhandledRejection", (reason) => {
-    console.error("[JARVIS] FATAL unhandled rejection:", reason);
+    console.error("[HAILIE] FATAL unhandled rejection:", reason);
     process.exit(1);
   });
 
   return {
     start() {
       httpsServer.listen(port, "::", () => {
-        console.log(`[JARVIS] Companion server running on wss://0.0.0.0:${port}`);
-        console.log(`[JARVIS] Local: wss://localhost:${port}`);
+        console.log(`[HAILIE] Companion server running on wss://0.0.0.0:${port}`);
+        console.log(`[HAILIE] Local: wss://localhost:${port}`);
 
         try {
           const hostname = os.hostname();
-          if (hostname) console.log(`[JARVIS] LAN: wss://${hostname}:${port}`);
+          if (hostname) console.log(`[HAILIE] LAN: wss://${hostname}:${port}`);
         } catch {}
 
-        console.log(`[JARVIS] whisper-cli: ${transcriber.isAvailable ? "available" : "NOT FOUND"}`);
-        console.log(`[JARVIS] STT language: ${langConfig.stt || companionConfig.whisperLang || "en"}`);
-        console.log(`[JARVIS] TTS mode: ${networkConfig.mobileTts || "local"}`);
-        console.log(`[JARVIS] Max connections: ${companionConfig.maxConnections ?? 2}`);
+        console.log(`[HAILIE] whisper-cli: ${transcriber.isAvailable ? "available" : "NOT FOUND"}`);
+        console.log(`[HAILIE] STT language: ${langConfig.stt || companionConfig.whisperLang || "en"}`);
+        console.log(`[HAILIE] TTS mode: ${networkConfig.mobileTts || "local"}`);
+        console.log(`[HAILIE] Max connections: ${companionConfig.maxConnections ?? 2}`);
       });
 
       httpServer.listen(localPort, "127.0.0.1", () => {
-        console.log(`[JARVIS] Local WS: ws://localhost:${localPort}`);
+        console.log(`[HAILIE] Local WS: ws://localhost:${localPort}`);
       });
     },
     shutdown,

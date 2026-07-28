@@ -1,4 +1,4 @@
-// JARVIS Companion — TTS Text Processing
+// Hailie Companion — TTS Text Processing
 // Pure functions for markdown stripping and sentence extraction.
 
 function stripMarkdown(text) {

@@ -1,5 +1,5 @@
 #!/bin/bash
-# JARVIS Companion — Setup Script
+# Hailie Companion — Setup Script
 # Generates TLS certificates, auth token, and installs dependencies.
 # Usage: bash setup.sh [--tailscale-ip <IP>]
 
@@ -19,7 +19,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 echo -e "${CYAN}╔══════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║   JARVIS Companion — Setup           ║${NC}"
+echo -e "${CYAN}║   Hailie Companion — Setup           ║${NC}"
 echo -e "${CYAN}╚══════════════════════════════════════╝${NC}"
 echo ""
 
@@ -74,17 +74,17 @@ echo -e "${CYAN}[2/6] Generating TLS certificates...${NC}"
 
 mkdir -p "$CERTS_DIR"
 
-if [ -f "$CERTS_DIR/jarvis-ca.pem" ] && [ -f "$CERTS_DIR/server.pem" ]; then
+if [ -f "$CERTS_DIR/hailie-ca.pem" ] && [ -f "$CERTS_DIR/server.pem" ]; then
   echo -e "  ${YELLOW}!${NC} Certificates already exist. Skipping generation."
   echo "    To regenerate, delete $CERTS_DIR and re-run setup."
 else
   # Generate CA key + certificate
-  openssl genrsa -out "$CERTS_DIR/jarvis-ca-key.pem" 4096 2>/dev/null
+  openssl genrsa -out "$CERTS_DIR/hailie-ca-key.pem" 4096 2>/dev/null
   openssl req -x509 -new -nodes \
-    -key "$CERTS_DIR/jarvis-ca-key.pem" \
+    -key "$CERTS_DIR/hailie-ca-key.pem" \
     -sha256 -days 3650 \
-    -out "$CERTS_DIR/jarvis-ca.pem" \
-    -subj "/CN=JARVIS Local CA" 2>/dev/null
+    -out "$CERTS_DIR/hailie-ca.pem" \
+    -subj "/CN=Hailie Local CA" 2>/dev/null
   echo -e "  ${GREEN}✓${NC} CA certificate generated (10-year validity)"
 
   # Build SAN extension
@@ -109,19 +109,19 @@ else
   openssl req -new \
     -key "$CERTS_DIR/server-key.pem" \
     -out "$CERTS_DIR/server.csr" \
-    -subj "/CN=jarvis-server" 2>/dev/null
+    -subj "/CN=hailie-server" 2>/dev/null
 
   openssl x509 -req \
     -in "$CERTS_DIR/server.csr" \
-    -CA "$CERTS_DIR/jarvis-ca.pem" \
-    -CAkey "$CERTS_DIR/jarvis-ca-key.pem" \
+    -CA "$CERTS_DIR/hailie-ca.pem" \
+    -CAkey "$CERTS_DIR/hailie-ca-key.pem" \
     -CAcreateserial \
     -out "$CERTS_DIR/server.pem" \
     -days 730 -sha256 \
     -extfile <(printf "subjectAltName=$SAN") 2>/dev/null
 
   # Clean up CSR and serial
-  rm -f "$CERTS_DIR/server.csr" "$CERTS_DIR/jarvis-ca.srl"
+  rm -f "$CERTS_DIR/server.csr" "$CERTS_DIR/hailie-ca.srl"
 
   echo -e "  ${GREEN}✓${NC} Server certificate generated (2-year validity)"
   echo -e "  ${GREEN}✓${NC} SAN: $SAN"
@@ -133,11 +133,19 @@ echo -e "${CYAN}[3/6] Generating auth token...${NC}"
 
 if [ -f "$ENV_FILE" ]; then
   echo -e "  ${YELLOW}!${NC} Token already exists in .env. Skipping."
-  TOKEN=$(grep "JARVIS_AUTH_TOKEN=" "$ENV_FILE" | cut -d'=' -f2)
+  TOKEN=$(grep "HAILIE_AUTH_TOKEN=" "$ENV_FILE" | cut -d'=' -f2)
 else
   TOKEN=$(openssl rand -hex 32)
-  echo "JARVIS_AUTH_TOKEN=$TOKEN" > "$ENV_FILE"
+  echo "HAILIE_AUTH_TOKEN=$TOKEN" > "$ENV_FILE"
   echo -e "  ${GREEN}✓${NC} Auth token generated and saved to .env"
+fi
+
+# Write ELEVENLABS_API_KEY to .env if provided and not already stored
+if [ -n "$ELEVENLABS_API_KEY" ] && ! grep -q "ELEVENLABS_API_KEY" "$ENV_FILE" 2>/dev/null; then
+  echo "ELEVENLABS_API_KEY=$ELEVENLABS_API_KEY" >> "$ENV_FILE"
+  echo -e "  ${GREEN}✓${NC} ElevenLabs API key saved to .env"
+elif grep -q "ELEVENLABS_API_KEY" "$ENV_FILE" 2>/dev/null; then
+  echo -e "  ${YELLOW}!${NC} ElevenLabs API key already in .env. Skipping."
 fi
 
 # ── Create config.local.json ──
@@ -178,7 +186,8 @@ echo ""
 echo -e "${CYAN}[6/6] Generating LaunchAgent plist...${NC}"
 
 NODE_PATH=$(which node)
-PLIST_FILE="$SCRIPT_DIR/com.jarvis.companion.plist"
+PLIST_FILE="$SCRIPT_DIR/com.hailie.companion.plist"
+EL_KEY=${ELEVENLABS_API_KEY:-""}
 
 cat > "$PLIST_FILE" << HEREDOC
 <?xml version="1.0" encoding="UTF-8"?>
@@ -186,7 +195,7 @@ cat > "$PLIST_FILE" << HEREDOC
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.jarvis.companion</string>
+    <string>com.hailie.companion</string>
     <key>ProgramArguments</key>
     <array>
         <string>${NODE_PATH}</string>
@@ -202,13 +211,15 @@ cat > "$PLIST_FILE" << HEREDOC
         <false/>
     </dict>
     <key>StandardOutPath</key>
-    <string>/tmp/jarvis-companion.log</string>
+    <string>/tmp/hailie-companion.log</string>
     <key>StandardErrorPath</key>
-    <string>/tmp/jarvis-companion.err</string>
+    <string>/tmp/hailie-companion.err</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
         <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${HOME}/.local/bin</string>
+        <key>ELEVENLABS_API_KEY</key>
+        <string>${EL_KEY}</string>
     </dict>
     <key>ThrottleInterval</key>
     <integer>10</integer>
@@ -235,10 +246,16 @@ echo "    cd companion && npm start"
 echo ""
 echo -e "  ${CYAN}Install as LaunchAgent (auto-start on login):${NC}"
 echo "    cp $PLIST_FILE ~/Library/LaunchAgents/"
-echo "    launchctl load ~/Library/LaunchAgents/com.jarvis.companion.plist"
+echo "    launchctl load ~/Library/LaunchAgents/com.hailie.companion.plist"
+echo ""
+echo -e "  ${CYAN}Enable ElevenLabs voice (optional):${NC}"
+echo "    1. Add your key to companion/.env:"
+echo "       ELEVENLABS_API_KEY=sk_..."
+echo "    2. Set engine in config: \"engine\": \"elevenlabs\""
+echo "    Falls back to Samantha (macOS say) automatically if unavailable."
 echo ""
 echo -e "  ${CYAN}Install CA cert on iOS (one-time):${NC}"
-echo "    1. AirDrop ${CERTS_DIR}/jarvis-ca.pem to your iPhone"
+echo "    1. AirDrop ${CERTS_DIR}/hailie-ca.pem to your iPhone"
 echo "    2. Settings → General → VPN & Device Management → Install"
 echo "    3. Settings → General → About → Certificate Trust Settings → Enable"
 echo ""

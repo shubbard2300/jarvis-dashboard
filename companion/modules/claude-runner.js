@@ -1,6 +1,6 @@
-// JARVIS Companion — Claude CLI Runner
+// Hailie Companion — Claude CLI Runner
 // Spawns claude CLI, streams output via stream-json format, manages session continuity.
-// Mirrors the logic from src/widgets/jarvis-voice-command.js
+// Mirrors the logic from src/widgets/hailie-voice-command.js
 
 const { spawn } = require("child_process");
 const fs = require("fs");
@@ -86,7 +86,7 @@ class ClaudeRunner {
     if (!this._personality?.prompt) return null;
     const template = this._personality.prompt;
     const name = this._personality.userName || "sir";
-    const assistant = this._personality.assistantName || "JARVIS";
+    const assistant = this._personality.assistantName || "HAILIE";
     let prompt = template.replace(/\{userName\}/g, name).replace(/\{assistantName\}/g, assistant);
 
     // Inject language instruction from supported languages

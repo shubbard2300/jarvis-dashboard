@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.jarvis.companion</string>
+    <string>com.hailie.companion</string>
     <key>ProgramArguments</key>
     <array>
         <string>/opt/homebrew/bin/node</string>
-        <string>/path/to/jarvis_dashboard/companion/server.js</string>
+        <string>/path/to/hailie_dashboard/companion/server.js</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/path/to/jarvis_dashboard/companion</string>
+    <string>/path/to/hailie_dashboard/companion</string>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
@@ -19,9 +19,9 @@
         <false/>
     </dict>
     <key>StandardOutPath</key>
-    <string>/tmp/jarvis-companion.log</string>
+    <string>/tmp/hailie-companion.log</string>
     <key>StandardErrorPath</key>
-    <string>/tmp/jarvis-companion.err</string>
+    <string>/tmp/hailie-companion.err</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>

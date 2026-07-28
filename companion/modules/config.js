@@ -1,4 +1,4 @@
-// JARVIS Companion — Configuration Loading
+// Hailie Companion — Configuration Loading
 // Loads config.json, merges config.local.json, reads .env token, loads TLS certs.
 
 const fs = require("fs");
@@ -13,7 +13,7 @@ function loadConfig(basePath) {
   try {
     config = JSON.parse(fs.readFileSync(configPath, "utf8"));
   } catch (e) {
-    console.warn("[JARVIS] Could not read config.json:", e.message);
+    console.warn("[HAILIE] Could not read config.json:", e.message);
   }
 
   // Merge local config (contains token and other overrides)
@@ -32,13 +32,17 @@ function loadConfig(basePath) {
   const port = networkConfig.port ?? 7777;
   const localPort = networkConfig.localPort ?? (port + 1);
 
-  // Load .env for auth token
+  // Load .env for auth token and optional API keys
   const envPath = path.resolve(basePath, ".env");
   let envToken = null;
   try {
     const envContent = fs.readFileSync(envPath, "utf8");
-    const match = envContent.match(/^JARVIS_AUTH_TOKEN=(.+)$/m);
-    if (match) envToken = match[1].trim();
+    const tokenMatch = envContent.match(/^HAILIE_AUTH_TOKEN=(.+)$/m);
+    if (tokenMatch) envToken = tokenMatch[1].trim();
+    const elMatch = envContent.match(/^ELEVENLABS_API_KEY=(.+)$/m);
+    if (elMatch && !process.env.ELEVENLABS_API_KEY) {
+      process.env.ELEVENLABS_API_KEY = elMatch[1].trim();
+    }
   } catch {
     // .env is optional if token is in config
   }
@@ -55,7 +59,7 @@ function loadConfig(basePath) {
     tlsOptions = {
       key: fs.readFileSync(path.join(certsDir, "server-key.pem")),
       cert: fs.readFileSync(path.join(certsDir, "server.pem")),
-      ca: fs.readFileSync(path.join(certsDir, "jarvis-ca.pem")),
+      ca: fs.readFileSync(path.join(certsDir, "hailie-ca.pem")),
     };
   } catch (e) {
     throw new Error(`TLS certificates not found. Run 'bash setup.sh' first. ${e.message}`);

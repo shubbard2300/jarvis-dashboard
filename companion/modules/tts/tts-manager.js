@@ -1,8 +1,9 @@
-// JARVIS Companion — TTS Queue & Dispatch
+// HAILIE Companion — TTS Queue & Dispatch
 // Manages TTS queue, engine selection, and language-based fallback.
 
 const SayEngine = require("./say-engine");
 const PiperEngine = require("./piper-engine");
+const ElevenLabsEngine = require("./elevenlabs-engine");
 const { stripMarkdown } = require("../text-processing");
 
 class TTSManager {
@@ -29,10 +30,14 @@ class TTSManager {
       supportedLangs: this._supportedLangs,
       speakers: config.speakers || {},
     });
+    this._elevenLabsEngine = new ElevenLabsEngine(config.elevenlabs || {});
 
     // Select primary engine
     this._engineName = config.engine || "say";
-    this._engine = this._engineName === "piper" ? this._piperEngine : this._sayEngine;
+    this._engine =
+      this._engineName === "piper" ? this._piperEngine :
+      this._engineName === "elevenlabs" ? this._elevenLabsEngine :
+      this._sayEngine;
 
     // Log piper model discovery
     if (this._piperEngine.modelsCount > 0) {
@@ -58,10 +63,12 @@ class TTSManager {
           if (this._onAudioChunk) this._onAudioChunk(base64Pcm, sampleRate);
         },
         (result) => {
-          // On piper failure, retry with say engine as fallback
-          if (!result.success && engine === this._piperEngine) {
+          if (!result.success) {
             const item = this._currentItem;
-            if (item) {
+            if (item && (engine === this._piperEngine || engine === this._elevenLabsEngine)) {
+              if (engine === this._elevenLabsEngine) {
+                console.warn("[TTS] ElevenLabs failed, falling back to Samantha (say)");
+              }
               this._sayEngine.speak(item.text, item.lang, this._epoch);
               return;
             }
@@ -73,6 +80,7 @@ class TTSManager {
 
     wireEngine(this._sayEngine);
     wireEngine(this._piperEngine);
+    wireEngine(this._elevenLabsEngine);
   }
 
   setMuted(muted) { this._muted = muted; }
@@ -119,6 +127,7 @@ class TTSManager {
     this._epoch++;
     this._sayEngine.stop();
     this._piperEngine.stop();
+    this._elevenLabsEngine.stop();
   }
 }
 

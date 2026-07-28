@@ -139,8 +139,8 @@
       },
       "tts": {
         "enabled": true,
-        "engine": "piper",
-        "say": { "voice": "Daniel", "rate": 160 },
+        "engine": "say",
+        "say": { "voice": "Samantha", "rate": 185 },
         "piper": {
           "binaryPath": "piper",
           "modelPath": "~/.config/piper/en_US-joe-medium.onnx",
@@ -149,6 +149,15 @@
           "noiseWScale": 0.5,
           "sentenceSilence": null,
           "volume": null
+        },
+        "elevenlabs": {
+          "apiKey": "",
+          "voiceId": "21m00Tcm4TlvDq8ikWAM",
+          "modelId": "eleven_turbo_v2_5",
+          "stability": 0.5,
+          "similarityBoost": 0.75,
+          "style": 0,
+          "speakerBoost": true
         }
       }
     },

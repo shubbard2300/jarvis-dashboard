@@ -1,4 +1,4 @@
-// JARVIS Companion — Audio Processing
+// Hailie Companion — Audio Processing
 // Temp file management for incoming audio + MP4/WebM → WAV conversion via ffmpeg.
 
 const fs = require("fs");
@@ -14,8 +14,8 @@ class AudioSession {
     this._ffmpegPath = ffmpegPath;
     this._sizeLimit = sizeLimit;
     this._totalSize = 0;
-    this._inputPath = path.join(os.tmpdir(), `jarvis-audio-${this._id}.${this._format}`);
-    this._outputPath = path.join(os.tmpdir(), `jarvis-audio-${this._id}.wav`);
+    this._inputPath = path.join(os.tmpdir(), `hailie-audio-${this._id}.${this._format}`);
+    this._outputPath = path.join(os.tmpdir(), `hailie-audio-${this._id}.wav`);
     this._fd = fs.openSync(this._inputPath, "w");
     this._closed = false;
   }

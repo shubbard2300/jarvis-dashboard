@@ -1,4 +1,4 @@
-// JARVIS Companion — Shared Pure Utilities
+// Hailie Companion — Shared Pure Utilities
 
 const os = require("os");
 

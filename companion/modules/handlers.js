@@ -1,4 +1,4 @@
-// JARVIS Companion — Message Handlers
+// Hailie Companion — Message Handlers
 // Thin handler functions for each WebSocket message type.
 
 const { AudioSession } = require("./audio");
@@ -10,13 +10,13 @@ function handlePing(msg, conn) {
 
 function handleCancel(msg, conn) {
   conn.cleanup();
-  console.log("[JARVIS] Cancelled by client");
+  console.log("[HAILIE] Cancelled by client");
 }
 
 function handleNewSession(msg, conn) {
   conn.cleanup();
   conn.runner.clearSession();
-  console.log("[JARVIS] Session cleared");
+  console.log("[HAILIE] Session cleared");
 }
 
 function handleAudioStart(msg, conn, pipeline, { companionConfig, networkConfig }) {
@@ -26,7 +26,7 @@ function handleAudioStart(msg, conn, pipeline, { companionConfig, networkConfig 
   const ffmpegPath = companionConfig.ffmpegPath || "/opt/homebrew/bin/ffmpeg";
   const sizeLimit = networkConfig.audioSizeLimit || 10485760;
   conn.audioSession = new AudioSession(msg.format || "mp4", ffmpegPath, sizeLimit);
-  console.log(`[JARVIS] Audio session started: format=${msg.format} sampleRate=${msg.sampleRate}`);
+  console.log(`[HAILIE] Audio session started: format=${msg.format} sampleRate=${msg.sampleRate}`);
 }
 
 function handleAudioEnd(msg, conn, pipeline) {
@@ -53,7 +53,7 @@ function handlePermissionResponse(msg, conn) {
     response: { behavior: msg.behavior || "deny" },
     ...(msg.updatedPermissions ? { updated_permissions: msg.updatedPermissions } : {}),
   });
-  console.log(`[JARVIS] Permission response ← client: ${msg.behavior} (${msg.requestId}) ${sent ? "sent" : "FAILED"}`);
+  console.log(`[HAILIE] Permission response ← client: ${msg.behavior} (${msg.requestId}) ${sent ? "sent" : "FAILED"}`);
 }
 
 function handleQuestionResponse(msg, conn) {
@@ -63,15 +63,15 @@ function handleQuestionResponse(msg, conn) {
     request_id: msg.requestId,
     response: msg.answer,
   });
-  console.log(`[JARVIS] Question response ← client: (${msg.requestId}) ${sent ? "sent" : "FAILED"}`);
+  console.log(`[HAILIE] Question response ← client: (${msg.requestId}) ${sent ? "sent" : "FAILED"}`);
 }
 
 function handleBinaryAudio(buffer, conn) {
   if (!conn.audioSession) {
-    console.log(`[JARVIS] Binary data received but no audio session (${buffer.length} bytes)`);
+    console.log(`[HAILIE] Binary data received but no audio session (${buffer.length} bytes)`);
     return;
   }
-  console.log(`[JARVIS] Audio chunk: ${buffer.length} bytes (total: ${conn.audioSession._totalSize + buffer.length})`);
+  console.log(`[HAILIE] Audio chunk: ${buffer.length} bytes (total: ${conn.audioSession._totalSize + buffer.length})`);
   const result = conn.audioSession.appendChunk(Buffer.from(buffer));
   if (!result.ok) {
     conn.send(protocol.error("audio", result.error));
