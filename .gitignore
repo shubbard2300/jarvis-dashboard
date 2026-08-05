@@ -1,5 +1,10 @@
-.claude/
+.claude/*
+!.claude/skills/
+!.claude/skills/graphify/
+!.claude/skills/graphify/**
+!.claude/settings.json
 CLAUDE.md
+!CLAUDE.md
 .DS_Store
 *.json.bak
 node_modules/
@@ -28,3 +33,7 @@ ios/build/
 ios/DerivedData/
 ios/web/src
 ios/web/shared
+
+# graphify (local scratch, not part of the committed graph)
+graphify-out/cache/
+graphify-out/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
