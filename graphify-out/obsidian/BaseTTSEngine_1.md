@@ -1,0 +1,17 @@
+---
+source_file: "companion/modules/tts/piper-engine.js"
+type: "code"
+community: "ClaudeRunner"
+location: "L10"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/ClaudeRunner
+---
+
+# BaseTTSEngine
+
+## Connections
+- [[piper-engine.js]] - `contains` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/ClaudeRunner

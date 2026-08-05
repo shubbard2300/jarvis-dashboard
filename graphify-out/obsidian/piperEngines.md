@@ -1,0 +1,17 @@
+---
+source_file: "src/services/tts-service.js"
+type: "code"
+community: "tts-service.js"
+location: "L185"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/tts-servicejs
+---
+
+# piperEngines
+
+## Connections
+- [[tts-service.js]] - `contains` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/tts-servicejs
