@@ -71,7 +71,7 @@ Project discovery and tracking configuration.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `"manual"` | `"auto"` (scan directory) or `"manual"` (explicit list) |
+| `mode` | string | `"auto"` | `"auto"` (scan directory) or `"manual"` (explicit list) |
 | `rootPath` | string | `"~/.claude/projects/"` | Root directory for auto-scan |
 | `tracked` | array | `[]` | Manual project list |
 
@@ -211,8 +211,26 @@ Remove a widget by deleting its entry from the layout array.
 | `name` | string | Display name |
 | `icon` | string | Unicode character or emoji |
 | `color` | string | Hex color for the icon |
-| `type` | string | `"app"` (open application) or `"url"` (open URL) |
-| `target` | string | Application name or URL |
+| `type` | string | `"app"` (open application), `"url"` (open URL), or `"path"` (open local file/folder) |
+| `target` | string | Application name, URL, or local path |
+| `reveal` | boolean | `path` type only — reveal in Finder instead of opening. Default `false`. |
+
+**Path bookmarks** open local files and folders straight from the dashboard. A
+leading `~` expands to your home directory, so paths stay portable across machines:
+
+```json
+{
+  "name": "Local Files",
+  "bookmarks": [
+    { "name": "Vault", "icon": "◈", "color": "#00d4ff", "type": "path", "target": "~/my-vault" },
+    { "name": "Projects", "icon": "▣", "color": "#44c98f", "type": "path", "target": "~/.claude/projects" },
+    { "name": "Notes", "icon": "▤", "color": "#7c6bff", "type": "path", "target": "~/Documents/notes.md", "reveal": true }
+  ]
+}
+```
+
+Folders open in Finder; files open in their default application. Set `reveal: true`
+to select the item in Finder rather than opening it.
 
 ### `widgets.missionControl`
 
@@ -239,8 +257,24 @@ Remove a widget by deleting its entry from the layout array.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `count` | number | `10` | Number of recent files to show |
-| `excludePatterns` | array | `["/(Daily\|Weekly\|Monthly)/"]` | Regex patterns to exclude |
+| `count` | number | `15` | Number of recent files to show |
+| `folders` | array | `[]` | Folder prefixes to restrict to. Empty = index the entire vault. |
+| `excludePatterns` | array | `[]` | Regex patterns to exclude |
+
+By default the widget indexes the **whole vault**. To scope it to specific
+folders, list them in `folders` (trailing slashes optional):
+
+```json
+{
+  "recentActivity": {
+    "count": 15,
+    "folders": ["Projects", "MOCs"],
+    "excludePatterns": ["/(Daily|Weekly|Monthly)/"]
+  }
+}
+```
+
+`folders` decides what is *included*; `excludePatterns` then filters that set down.
 
 ### `widgets.communicationLink`
 
@@ -274,8 +308,56 @@ The most complex widget configuration. See also [Voice Command Widget](../widget
 | `mode` | string | `"local"` | `"local"` (direct CLI) or `"remote"` (via server) |
 | `remoteTts` | string | `"local"` | TTS mode for remote: `"local"` or `"server"` |
 | `model` | string | `"sonnet"` | Default Claude model |
+| `activeAssistant` | string | `"jarvis"` | Which entry in `assistants` is currently driving the widget |
+| `assistants` | object | *(jarvis, hailie)* | Named assistant personas — see below |
 | `zoomMin` | number | `0.92` | Min zoom for arc reactor animation |
 | `zoomMax` | number | `1.08` | Max zoom for arc reactor animation |
+
+#### `widgets.voiceCommand.assistants`
+
+Multiple assistants can share one dashboard. `personality` (below) is the **base
+persona**; the entry selected by `activeAssistant` layers on top of it, so each
+assistant only has to declare what differs.
+
+```json
+{
+  "voiceCommand": {
+    "activeAssistant": "hailie",
+    "assistants": {
+      "jarvis": {
+        "displayName": "JARVIS",
+        "color": "#00d4ff",
+        "model": "sonnet",
+        "personality": { "assistantName": "JARVIS" }
+      },
+      "hailie": {
+        "displayName": "HAILIE",
+        "color": "#7c6bff",
+        "model": "opus",
+        "personality": { "assistantName": "HAILIE", "prompt": "You are {assistantName}…" },
+        "tts": { "piper": { "modelPath": "~/.config/piper/en_US-amy-medium.onnx" } }
+      }
+    }
+  }
+}
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `displayName` | string | Name shown in the widget |
+| `color` | string | Hex accent color for this assistant |
+| `model` | string | Overrides the top-level `model` when this assistant is active |
+| `personality` | object | Same fields as `personality`; merged over the base |
+| `tts` | object | Per-assistant voice overrides (Piper model, `say` voice/rate) |
+
+Both the desktop widget and the companion server resolve `activeAssistant` the
+same way, so mobile picks up whichever assistant is selected. Assistants also get
+a card on the dashboard via the [Agent Registry](#agent-registry) — see
+`src/config/agents/hailie.example.md` for a matching agent definition to copy into
+`.claude/agents/`.
+
+Omitting `assistants` entirely falls back to the bare `personality` block, so
+existing configs keep working unchanged.
 
 #### `widgets.voiceCommand.terminal`
 

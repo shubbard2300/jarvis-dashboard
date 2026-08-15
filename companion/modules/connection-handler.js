@@ -44,11 +44,20 @@ class ConnectionHandler {
       ? autoApproveList
       : [...new Set([...autoApproveList, ...alwaysAskList])];
 
+    // Resolve the active assistant persona (JARVIS, Hailie, …). The `personality`
+    // block is the base; the selected `assistants` entry layers over it.
+    const assistantsCfg = voiceConfig.assistants || {};
+    const activeAssistantId = voiceConfig.activeAssistant || Object.keys(assistantsCfg)[0] || null;
+    const activeAssistant = (activeAssistantId && assistantsCfg[activeAssistantId]) || {};
+    const resolvedPersonality = Object.assign(
+      {}, voiceConfig.personality || {}, activeAssistant.personality || {}
+    );
+
     this.runner = new ClaudeRunner({
       claudePath: companionConfig.claudePath,
       projectPath: voiceConfig.terminal?.projectPath,
-      model: voiceConfig.model,
-      personality: voiceConfig.personality,
+      model: activeAssistant.model || voiceConfig.model,
+      personality: resolvedPersonality,
       allowedTools: toolsToApprove,
       interactivePermissions: useInteractivePerms,
       supportedLangs: langConfig.supported || {},

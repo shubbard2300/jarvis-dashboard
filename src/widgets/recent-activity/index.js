@@ -7,6 +7,14 @@ const actCfg = config.widgets?.recentActivity || {};
 const count = actCfg.count || 10;
 const excludePatterns = (actCfg.excludePatterns || []).map(p => new RegExp(p));
 
+// Empty `folders` means index the whole vault. Otherwise restrict to these
+// folder prefixes (trailing slashes optional, e.g. "Projects" or "MOCs/").
+const folders = (actCfg.folders || [])
+  .map(f => String(f).replace(/^\/+|\/+$/g, ""))
+  .filter(Boolean);
+const inScope = (path) =>
+  folders.length === 0 || folders.some(f => path === f || path.startsWith(f + "/"));
+
 function loadSub(rel) {
   const code = ctx.nodeFs.readFileSync(
     ctx.nodePath.join(ctx._srcDir, "widgets", "recent-activity", rel), "utf8"
@@ -43,7 +51,7 @@ panel.appendChild(el("div", {
 setTimeout(() => {
   try {
     const recentPages = dv.pages()
-      .where(p => !excludePatterns.some(rx => rx.test(p.file.path)))
+      .where(p => inScope(p.file.path) && !excludePatterns.some(rx => rx.test(p.file.path)))
       .sort(p => p.file.mtime, "desc")
       .slice(0, count)
       .array();
