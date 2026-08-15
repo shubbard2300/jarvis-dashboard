@@ -4,7 +4,15 @@
 const { nodeFs, nodePath, config } = ctx;
 const cmdCfg = config.widgets?.voiceCommand || {};
 const interactiveCfg = cmdCfg.interactive || {};
-const personalityCfg = cmdCfg.personality || {};
+
+// ── Assistant resolution ──
+// `personality` is the base persona; an entry in `assistants` layers over it.
+// Falls back to the bare `personality` block when no assistants are configured.
+const assistantsCfg = cmdCfg.assistants || {};
+const activeAssistantId = cmdCfg.activeAssistant || Object.keys(assistantsCfg)[0] || null;
+const activeAssistant = (activeAssistantId && assistantsCfg[activeAssistantId]) || {};
+const personalityCfg = Object.assign({}, cmdCfg.personality || {}, activeAssistant.personality || {});
+const activeModel = activeAssistant.model || cmdCfg.model || null;
 
 function createProcessManager(options) {
   const { storageAdapter, stripAnsi } = options;
@@ -55,8 +63,7 @@ function createProcessManager(options) {
       const allAllowed = [...new Set([...autoApprove, ...alwaysAsk])];
       if (allAllowed.length > 0) args.push("--allowedTools", allAllowed.join(","));
     }
-    const model = cmdCfg.model || null;
-    if (model) args.push("--model", model);
+    if (activeModel) args.push("--model", activeModel);
     const personality = buildPersonalityPrompt();
     if (personality) args.push("--append-system-prompt", personality);
     return args;
@@ -207,6 +214,9 @@ function createProcessManager(options) {
     buildPersonalityPrompt,
     interactiveCfg,
     personalityCfg,
+    activeAssistantId,
+    activeAssistant,
+    assistantsCfg,
   };
 }
 

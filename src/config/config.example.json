@@ -23,7 +23,7 @@
     "textDim": "#3a4553"
   },
   "projects": {
-    "mode": "manual",
+    "mode": "auto",
     "rootPath": "~/.claude/projects/",
     "tracked": [
       { "dir": "your-project-directory", "label": "My Project" }
@@ -80,6 +80,40 @@
             { "name": "YouTube", "icon": "\u25b6", "color": "#e74c3c", "type": "url", "target": "https://youtube.com" },
             { "name": "Slack", "icon": "\ud83d\udcac", "color": "#7c6bff", "type": "app", "target": "Slack" }
           ]
+        },
+        {
+          "name": "Local Files",
+          "bookmarks": [
+            { "name": "Vault", "icon": "\u25c8", "color": "#00d4ff", "type": "path", "target": "~/my-vault" },
+            { "name": "Projects", "icon": "\u25a3", "color": "#44c98f", "type": "path", "target": "~/.claude/projects" },
+            { "name": "Documents", "icon": "\u25a4", "color": "#7c6bff", "type": "path", "target": "~/Documents" },
+            { "name": "Downloads", "icon": "\u25bc", "color": "#f6d365", "type": "path", "target": "~/Downloads" }
+          ]
+        },
+        {
+          "name": "Social",
+          "bookmarks": [
+            { "name": "LinkedIn", "icon": "in", "color": "#0a66c2", "type": "url", "target": "https://www.linkedin.com/in/YOUR-HANDLE" },
+            { "name": "X", "icon": "\u2715", "color": "#e0e6ed", "type": "url", "target": "https://x.com/YOUR-HANDLE" },
+            { "name": "Facebook", "icon": "f", "color": "#1877f2", "type": "url", "target": "https://www.facebook.com/YOUR-HANDLE" },
+            { "name": "Instagram", "icon": "\u25ce", "color": "#e1306c", "type": "url", "target": "https://www.instagram.com/YOUR-HANDLE" },
+            { "name": "Reddit", "icon": "\u25d5", "color": "#ff4500", "type": "url", "target": "https://www.reddit.com/user/YOUR-HANDLE" },
+            { "name": "Bluesky", "icon": "\u2601", "color": "#0085ff", "type": "url", "target": "https://bsky.app/profile/YOUR-HANDLE" },
+            { "name": "Mastodon", "icon": "\u25c9", "color": "#6364ff", "type": "url", "target": "https://mastodon.social/@YOUR-HANDLE" },
+            { "name": "GitHub", "icon": "\u2b21", "color": "#e0e6ed", "type": "url", "target": "https://github.com/YOUR-HANDLE" }
+          ]
+        },
+        {
+          "name": "Social \u2014 Archive",
+          "bookmarks": [
+            { "name": "MySpace", "icon": "\u25b3", "color": "#003399", "type": "url", "target": "https://myspace.com/YOUR-HANDLE" },
+            { "name": "Tribe", "icon": "\u25c7", "color": "#f6d365", "type": "url", "target": "https://web.archive.org/web/2015/http://people.tribe.net/YOUR-HANDLE" },
+            { "name": "Friendster", "icon": "\u2740", "color": "#1a5fa8", "type": "url", "target": "https://web.archive.org/web/2008/http://profiles.friendster.com/YOUR-HANDLE" },
+            { "name": "LiveJournal", "icon": "\u270e", "color": "#00b0ea", "type": "url", "target": "https://YOUR-HANDLE.livejournal.com" },
+            { "name": "Flickr", "icon": "\u25cf", "color": "#ff0084", "type": "url", "target": "https://www.flickr.com/photos/YOUR-HANDLE" },
+            { "name": "Last.fm", "icon": "\u266a", "color": "#d51007", "type": "url", "target": "https://www.last.fm/user/YOUR-HANDLE" },
+            { "name": "Delicious", "icon": "\u2691", "color": "#3399ff", "type": "url", "target": "https://web.archive.org/web/2016/http://del.icio.us/YOUR-HANDLE" }
+          ]
         }
       ]
     },
@@ -90,8 +124,9 @@
       ]
     },
     "recentActivity": {
-      "count": 10,
-      "excludePatterns": ["/(Daily|Weekly|Monthly)/"]
+      "count": 15,
+      "folders": [],
+      "excludePatterns": []
     },
     "communicationLink": {
       "terminalApp": "Terminal",
@@ -120,6 +155,34 @@
         "showToolUseLabels": true,
         "showCommand": false,
         "codeHighlighting": { "enabled": true }
+      },
+      "activeAssistant": "jarvis",
+      "assistants": {
+        "jarvis": {
+          "displayName": "JARVIS",
+          "color": "#00d4ff",
+          "model": "sonnet",
+          "personality": {
+            "assistantName": "JARVIS"
+          },
+          "tts": {
+            "piper": { "modelPath": "~/.config/piper/en_US-joe-medium.onnx" },
+            "say": { "voice": "Daniel", "rate": 160 }
+          }
+        },
+        "hailie": {
+          "displayName": "HAILIE",
+          "color": "#7c6bff",
+          "model": "opus",
+          "personality": {
+            "assistantName": "HAILIE",
+            "prompt": "You are {assistantName}, a highly capable AI assistant working alongside JARVIS. Address the user as \"{userName}\".\n\nRules:\n- Be warm, direct, and unhurried. You are the counterweight to JARVIS's clipped efficiency.\n- Keep responses to 2-4 sentences. Lead with the answer, then add the one piece of context that matters most.\n- Favour plain language over jargon. Explain the \"why\" when it changes what {userName} would do.\n- Where JARVIS reports, you interpret: surface the implication, the trade-off, or the thing worth a second look.\n- Ask a clarifying question when the request is genuinely ambiguous rather than guessing.\n- No filler phrases, corporate hedging, or false enthusiasm.\n- If you don't know something, say so plainly and say what you'd check.\n- Minimal markdown — responses are spoken aloud via TTS. Avoid code blocks, tables, and lists unless explicitly requested.\n- You are {assistantName}, not \"Claude\" or \"an AI assistant\". Never break character.\n- Optimize for audible clarity: short sentences, natural pauses at periods, no parenthetical asides."
+          },
+          "tts": {
+            "piper": { "modelPath": "~/.config/piper/en_US-amy-medium.onnx" },
+            "say": { "voice": "Samantha", "rate": 165 }
+          }
+        }
       },
       "personality": {
         "userName": "sir",

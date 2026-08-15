@@ -124,6 +124,26 @@ The JARVIS personality is applied via `--append-system-prompt` when spawning Cla
 
 Placeholders `{userName}`, `{assistantName}`, and `{languages}` are substituted at runtime. Set `prompt` to `null` to disable the personality.
 
+### Multiple Assistants
+
+`personality` is the base persona. Define additional assistants under `assistants`
+and select one with `activeAssistant`; the selected entry is merged over the base,
+and can override the model and TTS voice:
+
+```json
+{
+  "activeAssistant": "hailie",
+  "assistants": {
+    "jarvis": { "displayName": "JARVIS", "model": "sonnet", "personality": { "assistantName": "JARVIS" } },
+    "hailie": { "displayName": "HAILIE", "model": "opus",   "personality": { "assistantName": "HAILIE" } }
+  }
+}
+```
+
+Resolution happens in `desktop/process-manager.js` for local mode and in
+`companion/modules/connection-handler.js` for remote/mobile mode, so both surfaces
+run the same assistant. See [Customizations](../customizations/README.md#widgetsvoicecommandassistants) for the full field list.
+
 ### Arc Reactor Animation
 - Visual indicator inspired by Iron Man's arc reactor
 - Pulsates during recording

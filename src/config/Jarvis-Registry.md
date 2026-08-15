@@ -1,5 +1,18 @@
 ---
 agents:
+  - name: hailie
+    displayName: Hailie
+    model: opus
+    color: "#7c6bff"
+    location: vault
+    configPath: .claude/agents/hailie.md
+    description: "Second assistant alongside JARVIS. Warmer, more interpretive counterpart with the same vault and project access."
+    skills:
+      - deep-research
+      - doc-generation
+    command: /hailie
+    memoryDate: 2025-01-20
+
   - name: dev-assistant
     displayName: Dev Assistant
     model: sonnet

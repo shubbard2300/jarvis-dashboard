@@ -3,6 +3,13 @@
 
 const { el, T, addHoverEffect } = ctx;
 
+// Expand a leading "~" to the user's home directory so path bookmarks can be
+// written portably in config (e.g. "~/Documents/Notes").
+function expandHome(p) {
+  if (!p || p[0] !== "~") return p;
+  return require("os").homedir() + p.slice(1);
+}
+
 function createBookmarkCard(bookmark, animDelay) {
   const bm = bookmark;
   const card = el("div", {
@@ -24,12 +31,20 @@ function createBookmarkCard(bookmark, animDelay) {
   });
 
   card.addEventListener("click", () => {
+    const done = (err, verb) => {
+      if (err) new Notice(`Could not open ${bm.name}: ${err.message}`);
+      else new Notice(`${verb} ${bm.name}...`);
+    };
     if (bm.type === "app") {
-      require("child_process").execFile("open", ["-a", bm.target]);
-      new Notice(`Launching ${bm.name}...`);
+      require("child_process").execFile("open", ["-a", bm.target], (e) => done(e, "Launching"));
+    } else if (bm.type === "path") {
+      // Local file or folder. Reveal folders in Finder; open files in their
+      // default app. "reveal": true forces Finder for either.
+      const target = expandHome(bm.target);
+      const args = bm.reveal ? ["-R", target] : [target];
+      require("child_process").execFile("open", args, (e) => done(e, "Opening"));
     } else {
-      require("child_process").execFile("open", [bm.target]);
-      new Notice(`Opening ${bm.name}...`);
+      require("child_process").execFile("open", [bm.target], (e) => done(e, "Opening"));
     }
   });
 
